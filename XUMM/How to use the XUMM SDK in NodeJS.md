@@ -4,10 +4,11 @@ Preview at [dev.to](https://dev.to/wietse/how-to-use-the-xumm-sdk-in-node-js-538
 Every chapter a separate tutorial referring to the previous and next post.
 
 ---
+[XUMM](https://xumm.dev/beta) is an app (for iOS and Android) to access the XRP ledger. [XUMM](https://xumm.dev/beta) makes sending, receiving and interacting with the XRP ledger easy & secure. [XUMM](https://xumm.dev/beta) users can easily interact with 3rd party applications using sign requests.
 
 The XUMM API allows developers to deliver sign requests (payloads) to app users.
 
-A payload is a JSON formatted transaction template for a transaction on the XRP ledger. XUMM app users can [scan a QR code](https://www.youtube.com/watch?v=P6hL1FDvF4c) or receive a push notification to open the sign request. A user views & rejects or signs, after which the transaction will be signed locally.
+A payload is a JSON formatted transaction template for a transaction on the XRP ledger. XUMM app users can [scan a QR code](https://www.youtube.com/watch?v=P6hL1FDvF4c) or receive a push notification to open the sign request. A user views, then rejects or signs (accepts), after which the transaction will be signed locally.
 
 The transaction can then be automatically sent to the XRP ledger. The initiating application will get realtime status updates, and after signing the end user can return to the initiating platform.
 
@@ -21,7 +22,7 @@ Prior to following this XUMM SDK tutorial, we assume you setup your environment 
 
 [![Watch this step on Youtube](https://dev-to-uploads.s3.amazonaws.com/i/ke56jhpeq6gmjerebicr.png)](https://youtu.be/9gVK6fp3UOo)
 
-## 1. Get your XUMM API credentials 🔑
+## 1. Get Your XUMM API Credentials 🔑
 
 Visit the **[XUMM Developer Console](http://apps.xumm.dev/)** by navigating to https://apps.xumm.dev. If this is the first time using the XUMM Developer Console, you can register an account or (if you have one) sign in with your Github account.
 
@@ -38,15 +39,15 @@ Example credentials (where to look for):
 
 ### ❗ _**Keep these credentials safe!**_
 
-You can always find your App ID in the XUMM Developer Console, but your **App Secret** will be displayed **only once**. You can always re generate it, but doing so will require updating the App Secret in your applications.
+You can always find your App ID in the XUMM Developer Console, but your **App Secret** will be displayed **only once**. (This is a  good time to write it down. Don't store it on your PC or electronic devices.) You can always regenerate it, but doing so will require updating the App Secret in your applications.
 
 ### ❗ _**Never share/publish your app credentials!**_
 
-Your **App Secret** is for backend use only. Never use these credentials in a frontend, client side project. When you think your **App Secret** is compromised, please re generate your secret in the XUMM Developer Console.
+Your **App Secret** is for backend use only. Never use these credentials in a frontend, client side project. When you think your **App Secret** is compromised, please regenerate your secret in the XUMM Developer Console.
 
 Congratulations, you have registered your first (?) XUMM App. Let's get started!
 
-## 2. Prepare your project & start coding 🔨
+## 2. Prepare Your Project & Start Coding 🔨
 
 For this example we will use a Javascript (node) environment. More experienced developers will probably use Typescript or Deno, but to keep this tutorial as simple as possible we'll go with plain Javascript.
 
@@ -115,14 +116,14 @@ Let's run this:
 
 Looks like we can reach the XUMM platform 🎉 😎
 
-## 3. Your first payload 🔔
+## 3. Your First Payload 🔔
 Now we've established a connection to the XUMM platform using the XUMM SDK, it's time to actually send something we can sign. We'll send a "transaction template" to the XUMM platform, called a `Payload`. The lifecycle of a payload is explained [in more detail](https://xumm.readme.io/docs/payload-workflow) in the XUMM API documentation.
 
 Some things to consider:
 
-1. A payload (sign request) sent to the XUMM platform should be formatted as per [XRP ledger transaction specificaftions](https://xrpl.org/transaction-types.html), but some fields may be omitted as XUMM will fill them
+1. A payload (sign request) sent to the XUMM platform should be formatted as per [XRP ledger transaction specifications](https://xrpl.org/transaction-types.html), but some fields may be omitted as XUMM will fill them
 2. Usually, a payload (sign request) sent to the XUMM platform will be signed by end users (eg. for a sign in, subscription, payment, ...). For this tutorial, you'll be the initiator and the end user, signing (or rejecting) your own payload.
-3. The **first sign request** from a specific XUMM app will **always** have to be **scanned using a QR** code (desktop) **or redirected (mobile)**. Once an end user trusts your application (by signing your request) your application can obtain a user specific `user token` to deliver future sign requests using push notificaftions.
+3. The **first sign request** from a specific XUMM app will **always** have to be **scanned using a QR** code (desktop) **or redirected (mobile)**. Once an end user trusts your application (by signing your request) your application can obtain a user specific `user token` to deliver future sign requests using push notifications.
 4. This tutorial is running on your own computer, from the terminal. We'll just have to copy/paste a sign request URL to our browser. In a real life application, a nicer flow for end users can be created with redirects / [live status updates](https://xumm.readme.io/docs/payload-status#websocket) / [push & fallback QR codes](https://xumm.readme.io/docs/pushing-sign-requests), etc. That's for another day.
 
 Our first payload will be a `Payment` transaction type. A really basic `Payment` payload you can send to the XUMM platform would be:
@@ -149,16 +150,19 @@ Let's run this code. In the terminal panel, type the previously issued command t
 
 ![Your first payload!](https://dev-to-uploads.s3.amazonaws.com/i/oi1etslmure3qdj0114z.gif)
 
-## 4. Verify results ⛑ and push 🚀
-So you sent a payload to the XUMM platform sing the XUMM SDK, and got yourself a XUMM sign request.
+## 4. Verify Results ⛑ and Push 🚀
+So far, 
+- you've sent a payload to the XUMM platform using the XUMM SDK, 
+- you have a XUMM sign request,
+- you opened the `next.always` URL, and scanned the QR code with your smartphone running XUMM (or from your smartphone: got redirected to the XUMM app) and
+- signed your request. 
+That's already pretty sweet!
 
-You opened the `next.always` URL, scanned the QR code with your smartphone running XUMM (or from your smartphone: got redirected to the XUMM app) and signed your request. That's already pretty sweet!
-
-But now it's time to verify the payload outcome. And didn't we promise that, once signed, you'd get a `user token` to send your next payload using a Push notification? 
+But now it's time to verify the payload outcome. Didn't we promise that, once signed, you'd get a `user token` to send your next payload using a Push notification? 
 
 #### Please note: this is where this tutorial gets (even) more technical. Software developers will be able to follow this. If you've never coded before this will probably require some more spare time ;)
 
-This time, we're not just creating a sign request by sending a payload, we're sending a payload and subscribing to payload events. We just used the `Sdk.payload.create()` method. This time we will use the `Sdk.payload.createAndSubscribe()` method. 
+This time, we're not just creating a sign request by sending a payload; we're sending a payload and subscribing to payload events. We just used the `Sdk.payload.create()` method. This time we will use the `Sdk.payload.createAndSubscribe()` method. 
 
 The `createAndSubscribe` method accepts the payload in the first argument (just like the `create` method), but the second argument is a _function_ that gets invoked every time when the XUMM platform asynchronously sends an update about the created payload.
 
@@ -168,21 +172,21 @@ The subscription for payload events will stay alive until something is returned 
 
 When you execute this code, you'll immediately see the payload response containing the URL to open the payload. All the way down we console log the `subscription.created` object, containing the created payload data we previously got directly from the `create()` method. 
 
-The other code only executes right after, as the first payload events are fired once the SDK connected to the XUMM platform.
+The other code only executes right after; as the first payload events are fired and once the SDK is connected to the XUMM platform.
 
 If the event data contains a `signed` property, depending on if the payload has been signed, causes the callback _function_ to `console.log` a message, and return either the event data (if signed) or a boolean `false` (if not signed). By returning something (anything), the subscription ends.
 
-**See if you can get this example to run, open the created payload URL on your desktop, and while the SDK is waiting for status updates, try scanning the QR code with XUMM. You'll see the `opened` event live in your terminal 😎**
+**See if you can get this example to run. Open the created payload URL on your desktop, and while the SDK is waiting for status updates, try scanning the QR code with XUMM. You'll see the `opened` event live in your terminal 😎**
 
-When you got this to work, let's wrap this up by adding some code to wait for the `signed: true` event (signing the transaction was successful) so we can get our long awaited `user token` to deliver our future sign requests with a Push notification.
+Do you have this working? Great. Let's wrap this up by adding some code to wait for the `signed: true` event (signing the transaction was successful) so we can get our long awaited `user token`.  The `user token` allows us to deliver our future sign requests with a Push notification.
 
 {% gist https://gist.github.com/WietseWind/4d844eb3a77bdca59cdb14c3e511d894 file=index.js %}
 
-When we run this code, open the payload URL on our smartphone, sign it with XUMM, your terminal will look like this. Note the User Token at the end 🎉
+When we run this code, open the payload URL on our smartphone. Sign it with XUMM. Your terminal will look like this. (Note the User Token at the end) 🎉
 
 ![We got ourself a user token!](https://dev-to-uploads.s3.amazonaws.com/i/ndb9f5rp7s95usfay36s.png)
 
-The user token is a unique token for **your XUMM app** in combination with **the specifix XUMM user**. To use the token to deliver a sign requst per Push notification, let's adjust our first (minimal) sample payload to include the user token:
+The user token is a unique token for **your XUMM app** in combination with **the specific XUMM user**. Now let's use the token to deliver a sign request per Push notification. First, adjust our first (minimal) sample payload to include the user token:
 
 ```json
 {
@@ -194,7 +198,7 @@ The user token is a unique token for **your XUMM app** in combination with **the
 
 _Please change the destination account to an account (and possibly: DestinationTag) you own, or you'll be testing sending a small amount of XRP to the XRPL Labs team ;)_
 
-This payload only contains the XRP ledger specific transaction template. Because we are now going to send XUMM platform specific information as well, we need to wrap the XRP ledger transaction template in an object called `txjson`. We can then add [XUMM platform specific information](https://xumm.readme.io/reference/post-payload) to the payload as well, like `options`, `custom_meta` and the `user_token`.
+This payload only contains the XRP ledger specific transaction template. Because we are now going to send XUMM platform specific information as well, we need to wrap the XRP ledger transaction template in an object called `txjson`. We can then add [XUMM platform specific information](https://xumm.readme.io/reference/post-payload) to the payload as well. (For example, `options`, `custom_meta` and the `user_token`)
 
 Wrapping the XRP ledger transaction template in a `txjson` object, and adding the `user_token` property, our payload now looks like this:
 
@@ -210,7 +214,7 @@ Wrapping the XRP ledger transaction template in a `txjson` object, and adding th
 ```
 _Please change the destination account to an account (and possibly: DestinationTag) you own, or you'll be testing sending a small amount of XRP to the XRPL Labs team ;)_
 
-If we use the user token we got from our previously signed payload and use that in our code, you'll see your sign request popping up on your phone :D
+If we use the user token we received from our previously signed payload and use that in our code, we'll see our sign request popping up on our phone :D
 
 {% gist https://gist.github.com/WietseWind/7f04966c444909649ca43332671fc6d5 file=index.js %}
 
@@ -218,20 +222,24 @@ Now we'll run it, keeping an eye on our phone:
 
 ![Sign request Push notification](https://dev-to-uploads.s3.amazonaws.com/i/mh1zt643l9g007kd12ym.gif)
 
-When using this in applications, it would make sense to check the `pushed` property of a created payload. If `false` the Push notification could not be sent (eg. permissions revoked by the user), and your applicaftion should fall back to the QR method. If `pushed` is `true`, it makes sense to show the end user a button to show the QR code anyway if they didn't receive the push notificaftion (eg. changed devices / other device).
+When using this in applications, it would make sense to check the `pushed` property of a created payload:
+- If `false`, it means the Push notification could not be sent (eg. permissions revoked by the user), and your application should fall back to the QR method.
+- If `true`, it makes sense to show the end user a button to show the QR code anyway. (If they didn't receive the push notification.  eg. changed devices / other device)
 
-## 5. Security & finishing touch 🎉
+## 5. Security & Finishing Touches 🎉
 
 If you made it this far, you may want to actually build something (even if it's just a hobby project) using the XUMM SDK. If you do, please  **VERIFY THE PAYLOAD RESULT ON LEDGER**.
 
-You can use the **XRPL-TxData** package, or use the `Sdk.getTransaction(txHash)` method to do this by relying on the XUMM platform to fetch the on ledger transaction outcome for you, or eg. by using the `xrpl-txdata` package to verify 'locally'.
+To verify the payload result on the ledger, you can:
+- Use the **XRPL-TxData** package (Verifying the package locally), or
+- Use the `Sdk.getTransaction(txHash)` method; relying on the XUMM platform to fetch the on ledger transaction outcome for you.
 
 By using the `xrpl-txdata` package, you can connect to one of the public XRP ledger nodes and verify the transaction. To do so, add the `xrpl-txdata` package to your project by entering this in the terminal: `npm install xrpl-txdata`. You can verify a transaction as per the [package documentation](https://www.npmjs.com/package/xrpl-txdata).
 
 Pay special attention to the `balanceChanges` response.
-**❗ There are several reasons why eg. a payment can yield a different result (eg. lower amount sent) than requested!**
+**❗ There are several reasons why a payment can yield a different result.  For example, a lower amount was sent than requested!**
 
-It's your responsibility to check the transaction outcome straight from the XRP ledger, instead of simply relying on XUMM telling you a transaction has been signed. Eg. if:
+It's your responsibility to check the transaction outcome straight from the XRP ledger. Do not simply rely on XUMM telling you a transaction has been signed. For example, if:
 
 - The user signed successfully in XUMM, but with a key that is no longer valid for a certain account (because multisign has been configured, an account has been rekeyed, etc.)
 - The user sent a Partial Payment (eg. sending EUR to deliver XRP, while the owned amount of EUR was insufficient due to exchange rate slippage)
@@ -242,14 +250,14 @@ Please take a look at [this sample code implementing the `xrpl-txdata` package](
 ![Verify on ledger transaction](https://lmjk5ut.dlvr.cloud/tx.gif)
 
 ## Resources 📚
-If you want to dive into the XUMM SDK, patform, documentation, etc. some more, make sure to check out:
+If you want to dive into the XUMM SDK, platform, documentation, etc. some more, be sure to check out:
 
 - The XUMM SDK [readme](https://www.npmjs.com/package/xumm-sdk)
 - The XUMM SDK [source code](https://github.com/XRPL-Labs/XUMM-SDK)
 - The XUMM API [documentation](https://xumm.readme.io/docs) & API [reference](https://xumm.readme.io/reference/about)
 - XUMM (end user) [support docs](https://support.xumm.app/)
-- In case of questions: [support@xumm.app](mailto:support@xumm.app?subject=XUMM+SDK+-+dev.to)
+- If you have questions contact: [support@xumm.app](mailto:support@xumm.app?subject=XUMM+SDK+-+dev.to)
 
 #### Special thanks
 
-Thank you [@technotip](https://twitter.com/technotip) for your tutorial video's!
+Thank you [@technotip](https://twitter.com/technotip) for your tutorial videos!
